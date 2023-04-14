@@ -18,7 +18,7 @@ public class frmLogin extends javax.swing.JFrame {
      * Creates new form frmLogin
      */
     private LoginController loginController = new LoginController();
-
+    
     public frmLogin() {
         initComponents();
     }
@@ -58,6 +58,11 @@ public class frmLogin extends javax.swing.JFrame {
         txtTK.setText("admin");
 
         cbHien.setText("HIện mật khẩu");
+        cbHien.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cbHienActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -96,10 +101,20 @@ public class frmLogin extends javax.swing.JFrame {
         btnDangNhap.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
         btnDangNhap.setForeground(new java.awt.Color(0, 0, 255));
         btnDangNhap.setText("Đăng nhập");
+        btnDangNhap.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnDangNhapActionPerformed(evt);
+            }
+        });
 
         btnThoat.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
         btnThoat.setForeground(new java.awt.Color(255, 0, 0));
         btnThoat.setText("Thoát");
+        btnThoat.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnThoatActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -132,6 +147,32 @@ public class frmLogin extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void btnDangNhapActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDangNhapActionPerformed
+        String tk = txtTK.getText();
+        String mk = txtMK.getText();
+        UserLogin user = new UserLogin(tk, mk);
+        System.out.println(user.getTk() + " " +user.getMk());
+        boolean login = loginController.login(user);
+        if(login){
+            frmMain m = new frmMain();
+            m.setVisible(true);
+            this.dispose();
+        }
+    }//GEN-LAST:event_btnDangNhapActionPerformed
+
+    private void btnThoatActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnThoatActionPerformed
+        this.dispose();
+    }//GEN-LAST:event_btnThoatActionPerformed
+
+    private void cbHienActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbHienActionPerformed
+        // TODO add your handling code here:
+        if(cbHien.isSelected()){
+            txtMK.setEchoChar((char) 0);
+        } else {
+            txtMK.setEchoChar('*');
+        }
+    }//GEN-LAST:event_cbHienActionPerformed
 
     /**
      * @param args the command line arguments
