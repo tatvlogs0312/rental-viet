@@ -20,9 +20,12 @@ public class frmMain extends javax.swing.JFrame {
     /**
      * Creates new form main
      */
+    private MainController mainController = new MainController();
+
     public frmMain() {
         initComponents();
-
+        CheckAll_Phong();
+        Select_Phong();
     }
 
     /**
@@ -185,12 +188,27 @@ public class frmMain extends javax.swing.JFrame {
         jMenu1.setText("Quản lý");
 
         jMenuItem2.setText("Quản lý khách thuê");
+        jMenuItem2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem2ActionPerformed(evt);
+            }
+        });
         jMenu1.add(jMenuItem2);
 
         jMenuItem3.setText("Quản lý dịch vụ");
+        jMenuItem3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem3ActionPerformed(evt);
+            }
+        });
         jMenu1.add(jMenuItem3);
 
         jMenuItem5.setText("Thống kê");
+        jMenuItem5.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem5ActionPerformed(evt);
+            }
+        });
         jMenu1.add(jMenuItem5);
 
         jMenuBar1.add(jMenu1);
@@ -198,12 +216,27 @@ public class frmMain extends javax.swing.JFrame {
         jMenu2.setText("Hệ thống");
 
         jMenuItem4.setText("Đổi mật khẩu");
+        jMenuItem4.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem4ActionPerformed(evt);
+            }
+        });
         jMenu2.add(jMenuItem4);
 
         jMenuItem7.setText("Đăng xuất");
+        jMenuItem7.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem7ActionPerformed(evt);
+            }
+        });
         jMenu2.add(jMenuItem7);
 
         jMenuItem1.setText("Thoát");
+        jMenuItem1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem1ActionPerformed(evt);
+            }
+        });
         jMenu2.add(jMenuItem1);
 
         jMenuBar1.add(jMenu2);
@@ -240,9 +273,85 @@ public class frmMain extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    private void jMenuItem7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem7ActionPerformed
+        // TODO add your handling code here:
+        frmLogin fLogin = new frmLogin();
+        fLogin.setVisible(true);
+        this.dispose();
+    }//GEN-LAST:event_jMenuItem7ActionPerformed
+
+    private void jMenuItem2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem2ActionPerformed
+        // TODO add your handling code here:
+        frmKhachThue fKhachThue = new frmKhachThue();
+        fKhachThue.setVisible(true);
+        this.dispose();
+    }//GEN-LAST:event_jMenuItem2ActionPerformed
+
+    private void jMenuItem3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem3ActionPerformed
+        // TODO add your handling code here:
+        frmDV fDV = new frmDV();
+        fDV.setVisible(true);
+        this.dispose();
+    }//GEN-LAST:event_jMenuItem3ActionPerformed
+
+    private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
+        // TODO add your handling code here:
+        this.dispose();
+    }//GEN-LAST:event_jMenuItem1ActionPerformed
+
+    private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem4ActionPerformed
+        // TODO add your handling code here:
+        frmChangePassword fcp = new  frmChangePassword();
+        fcp.setVisible(true);
+        this.dispose();
+    }//GEN-LAST:event_jMenuItem4ActionPerformed
+
+    private void jMenuItem5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem5ActionPerformed
+        // TODO add your handling code here:
+        frmThongKe fThongKe = new frmThongKe();
+        fThongKe.setVisible(true);
+        this.dispose();
+    }//GEN-LAST:event_jMenuItem5ActionPerformed
+
     /**
      * @param args the command line arguments
      */
+    public void Select_Phong() {
+        Component[] component = ListPhong.getComponents();
+        for (int i = 0; i < component.length; i++) {
+            if (component[i] instanceof JButton) {
+                JButton button = (JButton) component[i];
+                String phongIsSelected = button.getText();
+//                String Status = mainController.CheckStatus_Phong(phongIsSelected);
+
+                button.addActionListener(new ActionListener() {
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
+                        frmHopDong fHopDong = new frmHopDong(phongIsSelected);
+                        fHopDong.setVisible(true);
+                        dispose();
+                    }
+                });              
+            }
+        }
+    }
+
+    public void CheckAll_Phong() {
+        Component[] component = ListPhong.getComponents();
+        for (int i = 0; i < component.length; i++) {
+            if (component[i] instanceof JButton) {
+                JButton button = (JButton) component[i];
+                String CurrentBtn = button.getText();
+                String Status = mainController.CheckStatus_Phong(CurrentBtn);
+                if (Status.contains("còn trống")) {
+                    button.setBackground(new Color(255, 255, 0));
+                } else if (Status.contains("đã cho thuê")) {
+                    button.setBackground(new Color(51, 255, 51));
+                }
+            }
+        }
+    }
+
     public static void main(String args[]) {
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
