@@ -19,13 +19,59 @@ import javax.swing.table.TableModel;
  * @author Tran Anh Tuan
  */
 public class frmKhachThue extends javax.swing.JFrame {
-
     /**
      * Creates new form frmKhachThue
      */
+    private boolean isUpdate = true;
+    private DefaultTableModel tableModel = new DefaultTableModel();
+    private KhachThueController controller = new KhachThueController();
+
     public frmKhachThue() {
         initComponents();
+        tbKhachThue.setModel(tableModel);
+        String[] row = {"CMND", "Tên", "Tuổi", "Quê Quán", "Giới Tính", "Số điện thoại"};
+        tableModel.setColumnIdentifiers(row);
+        showData();
+        setBTN(true);
+        rdNam.setSelected(true);
+    }
 
+    public final void setBTN(boolean a) {
+        btnThem.setEnabled(a);
+        btnSua.setEnabled(!a);
+        btnXoa.setEnabled(!a);
+        btnTim.setEnabled(a);
+    }
+
+    public final void showData() {
+        clearData();
+        List<KhachThue> list = controller.getAll();
+        for (int i = 0; i < list.size(); i++) {
+            Object[] rows = {
+                list.get(i).getCmnd(),
+                list.get(i).getTen(),
+                list.get(i).getTuoi(),
+                list.get(i).getQuequan(),
+                list.get(i).getGioitinh(),
+                list.get(i).getSdt()
+            };
+            tableModel.addRow(rows);
+        }
+    }
+
+    public final void clearData() {
+        int n = tableModel.getRowCount() - 1;
+        for (int i = n; i >= 0; i--) {
+            tableModel.removeRow(i);
+        }
+    }
+
+    public final void clearText() {
+        txtCMND.setText("");
+        txtTen.setText("");
+        txtTuoi.setText("");
+        txtQueQuan.setText("");
+        txtSDT.setText("");
     }
 
     /**
@@ -148,22 +194,52 @@ public class frmKhachThue extends javax.swing.JFrame {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel7)
                     .addComponent(txtSDT, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(14, Short.MAX_VALUE))
         );
 
         jPanel2.setBorder(javax.swing.BorderFactory.createTitledBorder("Chức năng"));
 
         btnThem.setText("Thêm");
+        btnThem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnThemActionPerformed(evt);
+            }
+        });
 
         btnSua.setText("Sửa");
+        btnSua.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnSuaActionPerformed(evt);
+            }
+        });
 
         btnXoa.setText("Xóa");
+        btnXoa.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnXoaActionPerformed(evt);
+            }
+        });
 
         btnTim.setText("Tìm kiếm");
+        btnTim.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnTimActionPerformed(evt);
+            }
+        });
 
         btnReset.setText("Đặt lại");
+        btnReset.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnResetActionPerformed(evt);
+            }
+        });
 
         btnBack.setText("Quay lại");
+        btnBack.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnBackActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -206,6 +282,11 @@ public class frmKhachThue extends javax.swing.JFrame {
                 "Title 1", "Title 2", "Title 3", "Title 4", "Title 5", "Title 6"
             }
         ));
+        tbKhachThue.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tbKhachThueMouseClicked(evt);
+            }
+        });
         jScrollPane1.setViewportView(tbKhachThue);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -242,6 +323,141 @@ public class frmKhachThue extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void btnThemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnThemActionPerformed
+        // TODO add your handling code here:
+        String cmnd = txtCMND.getText();
+        String ten = txtTen.getText();
+        String tuoi = txtTuoi.getText();
+        String gioiTinh = "";
+        if (rdNam.isSelected()) {
+            gioiTinh = "Nam";
+        } else {
+            gioiTinh = "Nữ";
+        }
+        String queQuan = txtQueQuan.getText();
+        String sdt = txtSDT.getText();
+        KhachThue kt = new KhachThue(cmnd, ten, tuoi, queQuan, gioiTinh, sdt);
+        try {
+            boolean them = controller.insertData(kt);
+            if (them) {
+                JOptionPane.showMessageDialog(rootPane, "Thêm thành công");
+            } else {
+                JOptionPane.showMessageDialog(rootPane, "Thêm không thành công");
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(frmKhachThue.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        showData();
+        clearText();
+    }//GEN-LAST:event_btnThemActionPerformed
+
+    private void btnSuaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSuaActionPerformed
+        // TODO add your handling code here:
+        String cmnd = txtCMND.getText();
+        String ten = txtTen.getText();
+        String tuoi = txtTuoi.getText();
+        String gioiTinh = "";
+        if (rdNam.isSelected()) {
+            gioiTinh = "Nam";
+        } else {
+            gioiTinh = "Nữ";
+        }
+        String queQuan = txtQueQuan.getText();
+        String sdt = txtSDT.getText();
+        KhachThue kt = new KhachThue(cmnd, ten, tuoi, queQuan, gioiTinh, sdt);
+        try {
+            boolean sua = controller.updateData(kt);
+            if (sua) {
+                JOptionPane.showMessageDialog(rootPane, "Sửa thành công");
+            } else {
+                JOptionPane.showMessageDialog(rootPane, "Sửa không thành công");
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(frmKhachThue.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        showData();
+        clearText();
+        setBTN(true);
+    }//GEN-LAST:event_btnSuaActionPerformed
+
+    private void tbKhachThueMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tbKhachThueMouseClicked
+        // TODO add your handling code here:
+        TableModel tableModel = tbKhachThue.getModel();
+        int row = tbKhachThue.getSelectedRow();
+        txtCMND.setText(tableModel.getValueAt(row, 0).toString());
+        txtTen.setText(tableModel.getValueAt(row, 1).toString());
+        txtTuoi.setText(tableModel.getValueAt(row, 2).toString());
+        txtQueQuan.setText(tableModel.getValueAt(row, 3).toString());
+        String gt = tableModel.getValueAt(row, 4).toString();
+        if (gt.contains("Nam")) {
+            rdNam.setSelected(true);
+        } else {
+            rdNu.setSelected(true);
+        }
+        txtSDT.setText(tableModel.getValueAt(row, 5).toString());
+        setBTN(false);
+    }//GEN-LAST:event_tbKhachThueMouseClicked
+
+    private void btnXoaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnXoaActionPerformed
+        // TODO add your handling code here:
+        String cmnd = txtCMND.getText();
+        try {
+            boolean xoa = controller.deleteData(cmnd);
+            if (xoa) {
+                JOptionPane.showMessageDialog(rootPane, "Xóa thành công");
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(frmKhachThue.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        showData();
+        clearText();
+        setBTN(true);
+    }//GEN-LAST:event_btnXoaActionPerformed
+
+    private void btnResetActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnResetActionPerformed
+        // TODO add your handling code here:
+        clearText();
+        setBTN(true);
+        showData();
+    }//GEN-LAST:event_btnResetActionPerformed
+
+    private void btnTimActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnTimActionPerformed
+        // TODO add your handling code here:
+        String cmnd = txtCMND.getText();
+        String ten = txtTen.getText();
+        String tuoi = txtTuoi.getText();
+        String gioiTinh = "";
+        if (rdNam.isSelected()) {
+            gioiTinh = "Nam";
+        } else {
+            gioiTinh = "Nữ";
+        }
+        String queQuan = txtQueQuan.getText();
+        String sdt = txtSDT.getText();
+        KhachThue kt = new KhachThue(cmnd, ten, tuoi, queQuan, gioiTinh, sdt);
+        
+        clearData();
+        List<KhachThue> list = controller.searchData(kt);
+        for (int i = 0; i < list.size(); i++) {
+            Object[] rows = {
+                list.get(i).getCmnd(),
+                list.get(i).getTen(),
+                list.get(i).getTuoi(),
+                list.get(i).getQuequan(),
+                list.get(i).getGioitinh(),
+                list.get(i).getSdt()
+            };
+            tableModel.addRow(rows);
+        }
+    }//GEN-LAST:event_btnTimActionPerformed
+
+    private void btnBackActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBackActionPerformed
+        // TODO add your handling code here:
+        frmMain fMain = new frmMain();
+        fMain.setVisible(true);
+        this.dispose();
+    }//GEN-LAST:event_btnBackActionPerformed
 
     /**
      * @param args the command line arguments
