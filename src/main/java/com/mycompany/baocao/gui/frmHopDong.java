@@ -25,9 +25,112 @@ public class frmHopDong extends javax.swing.JFrame {
     /**
      * Creates new form frmHopDong
      */
+    private DefaultTableModel tbKT = new DefaultTableModel();
+    private DefaultTableModel tbHD = new DefaultTableModel();
+    private HopDongController controller = new HopDongController();
+
     public frmHopDong() {
         initComponents();
+        String[] rowKT = {"CMND", "Ten"};
+        String[] rowHD = {"ID", "CMND", "Phong", "Gia phong", "Ngay vao o", "Trang thai"};
+        tbHopDong.setModel(tbHD);
+        tbKhachThue.setModel(tbKT);
+        tbHD.setColumnIdentifiers(rowHD);
+        tbKT.setColumnIdentifiers(rowKT);
+        showKT();
+        showHD();
+    }
 
+    public frmHopDong(String phong) {
+        initComponents();
+        String[] rowKT = {"CMND", "Ten"};
+        String[] rowHD = {"ID", "CMND", "Phong", "Gia phong", "Ngay vao o", "Trang thai"};
+        tbHopDong.setModel(tbHD);
+        tbKhachThue.setModel(tbKT);
+        tbHD.setColumnIdentifiers(rowHD);
+        tbKT.setColumnIdentifiers(rowKT);
+        showKT();
+        showHD();
+        txtPhong.setText(phong);
+        showHDByPhong(txtPhong.getText());
+        String status = controller.CheckStatus_Phong(phong);
+        if (status.contains("đã cho thuê")) {
+            btnTaoHopDong.setVisible(false);
+            btnKTHopDong.setVisible(true);
+            btnDonGia.setVisible(true);
+            btnHoaDon.setVisible(true);
+        } else {
+            btnTaoHopDong.setVisible(true);
+            btnKTHopDong.setVisible(false);
+            btnDonGia.setVisible(false);
+            btnHoaDon.setVisible(false);
+        }
+    }
+
+    public final void showHDByPhong(String phong) {
+        try {
+            HopDong hd = controller.getHDByPhong(phong);
+            txtCMND.setText(hd.getCmnd());
+            txtIDHopDong.setText(hd.getId());
+            txtTienPhong.setText(String.valueOf(hd.getGiaPhong()));
+            txtNgayVaoO.setText(hd.getNgayVaoO());
+        } catch (SQLException ex) {
+            Logger.getLogger(frmHopDong.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    public final void showKT() {
+        clearDataKT();
+        List<KhachThue> lst = controller.getKhachThue();
+        for (int i = 0; i < lst.size(); i++) {
+            Object[] row = {
+                lst.get(i).getCmnd(),
+                lst.get(i).getTen()
+            };
+            tbKT.addRow(row);
+        }
+    }
+
+    public final void clearDataKT() {
+        int n = tbKT.getRowCount() - 1;
+        for (int i = n; i >= 0; i--) {
+            tbKT.removeRow(i);
+        }
+    }
+
+    public final void clearTextKT() {
+        txtTimCMND.setText("");
+        txtTimTen.setText("");
+    }
+
+    public final void showHD() {
+        clearDataHD();
+        List<HopDong> lst = controller.getHopDong();
+        for (int i = 0; i < lst.size(); i++) {
+            Object[] row = {
+                lst.get(i).getId(),
+                lst.get(i).getCmnd(),
+                lst.get(i).getPhong(),
+                lst.get(i).getGiaPhong(),
+                lst.get(i).getNgayVaoO(),
+                lst.get(i).getTrangThai(),};
+            tbHD.addRow(row);
+        }
+    }
+
+    public final void clearDataHD() {
+        int n = tbHD.getRowCount() - 1;
+        for (int i = n; i >= 0; i--) {
+            tbHD.removeRow(i);
+        }
+    }
+
+    public final void clearTextHD() {
+        txtCMND.setText("");
+        txtIDHopDong.setText("");
+        txtNgayVaoO.setText("");
+        txtTienPhong.setText("");
+        txtPhong.setText("");
     }
 
     /**
@@ -86,11 +189,21 @@ public class frmHopDong extends javax.swing.JFrame {
                 "Title 1", "Title 2"
             }
         ));
+        tbKhachThue.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tbKhachThueMouseClicked(evt);
+            }
+        });
         jScrollPane1.setViewportView(tbKhachThue);
 
         jLabel8.setText("cmnd");
 
         btnTimKhach.setText("tìm kiếm");
+        btnTimKhach.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnTimKhachActionPerformed(evt);
+            }
+        });
 
         jLabel9.setText("tên");
 
@@ -151,6 +264,11 @@ public class frmHopDong extends javax.swing.JFrame {
                 "Title 1", "Title 2", "Title 3", "Title 4", "Title 5", "Title 6"
             }
         ));
+        tbHopDong.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tbHopDongMouseClicked(evt);
+            }
+        });
         jScrollPane2.setViewportView(tbHopDong);
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
@@ -181,16 +299,46 @@ public class frmHopDong extends javax.swing.JFrame {
         jLabel7.setText("Ngày vào ở");
 
         jButton2.setText("quay lại");
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton2ActionPerformed(evt);
+            }
+        });
 
         btnTaoHopDong.setText("tạo hợp đồng");
+        btnTaoHopDong.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnTaoHopDongActionPerformed(evt);
+            }
+        });
 
         btnKTHopDong.setText("kết thúc hợp đồng");
+        btnKTHopDong.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnKTHopDongActionPerformed(evt);
+            }
+        });
 
         btnClear.setText("đặt lại");
+        btnClear.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnClearActionPerformed(evt);
+            }
+        });
 
         btnDonGia.setText("Đơn giá dịch vụ");
+        btnDonGia.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnDonGiaActionPerformed(evt);
+            }
+        });
 
         btnHoaDon.setText("Hóa đơn");
+        btnHoaDon.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnHoaDonActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -289,6 +437,133 @@ public class frmHopDong extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+        // TODO add your handling code here:
+        frmMain fMain = new frmMain();
+        fMain.setVisible(true);
+        this.dispose();
+    }//GEN-LAST:event_jButton2ActionPerformed
+
+    private void btnTimKhachActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnTimKhachActionPerformed
+        // TODO add your handling code here:
+        String cmnd = txtTimCMND.getText();
+        String ten = txtTimTen.getText();
+
+        clearDataKT();
+        List<KhachThue> lst = controller.searchKhachThue(cmnd, ten);
+        for (int i = 0; i < lst.size(); i++) {
+            Object[] row = {
+                lst.get(i).getCmnd(),
+                lst.get(i).getTen()
+            };
+            tbKT.addRow(row);
+        }
+        clearTextKT();
+    }//GEN-LAST:event_btnTimKhachActionPerformed
+
+    private void tbKhachThueMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tbKhachThueMouseClicked
+        // TODO add your handling code here:
+        TableModel tableModel = tbKhachThue.getModel();
+        int row = tbKhachThue.getSelectedRow();
+        txtCMND.setText(tableModel.getValueAt(row, 0).toString());
+    }//GEN-LAST:event_tbKhachThueMouseClicked
+
+    private void btnTaoHopDongActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnTaoHopDongActionPerformed
+        // TODO add your handling code here:
+        String id = txtIDHopDong.getText();
+        String cmnd = txtCMND.getText();
+        String phong = txtPhong.getText();
+        String ngayVaoO = txtNgayVaoO.getText();
+        int tienPhong = Integer.parseInt(txtTienPhong.getText());
+        String trangThai = "có hiệu lực";
+        HopDong hd = new HopDong(id, cmnd, phong, tienPhong, ngayVaoO, trangThai);
+
+        String status = controller.CheckStatus_Phong(phong);
+
+        if (status.contains("đã cho thuê")) {
+            JOptionPane.showMessageDialog(rootPane, "Phòng đã có người thuê không thể tạo hợp đồng");
+        } else {
+            try {
+                boolean tao = controller.insertHD(hd);
+                if (tao) {
+                    JOptionPane.showMessageDialog(rootPane, "Tạo hợp đồng thành công");
+                    boolean thayDoi = controller.updatePhongChoThue(phong);
+                    if (thayDoi) {
+                        JOptionPane.showMessageDialog(rootPane, "Cập nhật lại phòng thành công");
+                        showHD();
+                        clearTextHD();
+                    }
+                } else {
+                    JOptionPane.showMessageDialog(rootPane, "Tạo hợp đồng không thành công");
+                    showHD();
+                    clearTextHD();
+                }
+            } catch (SQLException ex) {
+                JOptionPane.showMessageDialog(rootPane, "Ban chua nhap day du thong tin");
+            }
+        }
+
+    }//GEN-LAST:event_btnTaoHopDongActionPerformed
+
+    private void btnKTHopDongActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnKTHopDongActionPerformed
+        // TODO add your handling code here:
+        String id = txtIDHopDong.getText();
+        String phong = txtPhong.getText();
+
+        String status = controller.CheckStatus_Phong(phong);
+
+        if (status.contains("còn trống")) {
+            JOptionPane.showMessageDialog(rootPane, "Phòng chưa có người thuê không thể kết thúc hợp đồng");
+        } else {
+            try {
+                boolean tao = controller.updateHD(id);
+                if (tao) {
+                    JOptionPane.showMessageDialog(rootPane, "Kết thúc hợp đồng thành công");
+                    boolean thayDoi = controller.updatePhongConTrong(phong);
+                    if (thayDoi) {
+                        JOptionPane.showMessageDialog(rootPane, "Cập nhật lại phòng thành công");
+                    }
+                } else {
+                    JOptionPane.showMessageDialog(rootPane, "Kết thúc hợp đồng không thành công");
+                }
+            } catch (SQLException ex) {
+                Logger.getLogger(frmHopDong.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        showHD();
+        clearTextHD();
+    }//GEN-LAST:event_btnKTHopDongActionPerformed
+
+    private void tbHopDongMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tbHopDongMouseClicked
+        // TODO add your handling code here:
+        TableModel tableModel = tbHopDong.getModel();
+        int row = tbHopDong.getSelectedRow();
+        txtIDHopDong.setText(tableModel.getValueAt(row, 0).toString());
+        txtCMND.setText(tableModel.getValueAt(row, 1).toString());
+        txtPhong.setText(tableModel.getValueAt(row, 2).toString());
+        txtTienPhong.setText(tableModel.getValueAt(row, 3).toString());
+        txtNgayVaoO.setText(tableModel.getValueAt(row, 4).toString());
+    }//GEN-LAST:event_tbHopDongMouseClicked
+
+    private void btnClearActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnClearActionPerformed
+        // TODO add your handling code here:
+        clearTextHD();
+    }//GEN-LAST:event_btnClearActionPerformed
+
+    private void btnDonGiaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDonGiaActionPerformed
+        // TODO add your handling code here:
+        frmDonGiaDV fDonGiaDV = new frmDonGiaDV(txtIDHopDong.getText());
+        fDonGiaDV.setVisible(true);
+        this.dispose();
+    }//GEN-LAST:event_btnDonGiaActionPerformed
+
+    private void btnHoaDonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnHoaDonActionPerformed
+        // TODO add your handling code here:
+        frmHoaDon fDon = new frmHoaDon(txtIDHopDong.getText());
+        fDon.setVisible(true);
+        this.dispose();
+    }//GEN-LAST:event_btnHoaDonActionPerformed
 
     /**
      * @param args the command line arguments

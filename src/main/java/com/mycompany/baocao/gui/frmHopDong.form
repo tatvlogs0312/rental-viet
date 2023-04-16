@@ -249,6 +249,9 @@
                   <TableHeader reorderingAllowed="true" resizingAllowed="true"/>
                 </Property>
               </Properties>
+              <Events>
+                <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="tbKhachThueMouseClicked"/>
+              </Events>
             </Component>
           </SubComponents>
         </Container>
@@ -263,6 +266,9 @@
           <Properties>
             <Property name="text" type="java.lang.String" value="t&#xec;m ki&#x1ebf;m"/>
           </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnTimKhachActionPerformed"/>
+          </Events>
         </Component>
         <Component class="javax.swing.JLabel" name="jLabel9">
           <Properties>
@@ -360,6 +366,9 @@
                   <TableHeader reorderingAllowed="true" resizingAllowed="true"/>
                 </Property>
               </Properties>
+              <Events>
+                <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="tbHopDongMouseClicked"/>
+              </Events>
             </Component>
           </SubComponents>
         </Container>
@@ -404,31 +413,49 @@
       <Properties>
         <Property name="text" type="java.lang.String" value="quay l&#x1ea1;i"/>
       </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jButton2ActionPerformed"/>
+      </Events>
     </Component>
     <Component class="javax.swing.JButton" name="btnTaoHopDong">
       <Properties>
         <Property name="text" type="java.lang.String" value="t&#x1ea1;o h&#x1ee3;p &#x111;&#x1ed3;ng"/>
       </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnTaoHopDongActionPerformed"/>
+      </Events>
     </Component>
     <Component class="javax.swing.JButton" name="btnKTHopDong">
       <Properties>
         <Property name="text" type="java.lang.String" value="k&#x1ebf;t th&#xfa;c h&#x1ee3;p &#x111;&#x1ed3;ng"/>
       </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnKTHopDongActionPerformed"/>
+      </Events>
     </Component>
     <Component class="javax.swing.JButton" name="btnClear">
       <Properties>
         <Property name="text" type="java.lang.String" value="&#x111;&#x1eb7;t l&#x1ea1;i"/>
       </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnClearActionPerformed"/>
+      </Events>
     </Component>
     <Component class="javax.swing.JButton" name="btnDonGia">
       <Properties>
         <Property name="text" type="java.lang.String" value="&#x110;&#x1a1;n gi&#xe1; d&#x1ecb;ch v&#x1ee5;"/>
       </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnDonGiaActionPerformed"/>
+      </Events>
     </Component>
     <Component class="javax.swing.JButton" name="btnHoaDon">
       <Properties>
         <Property name="text" type="java.lang.String" value="H&#xf3;a &#x111;&#x1a1;n"/>
       </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnHoaDonActionPerformed"/>
+      </Events>
     </Component>
   </SubComponents>
 </Form>
