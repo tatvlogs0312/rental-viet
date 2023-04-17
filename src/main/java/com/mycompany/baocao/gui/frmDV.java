@@ -22,9 +22,38 @@ public class frmDV extends javax.swing.JFrame {
     /**
      * Creates new form frmDV
      */
+    
+    private DefaultTableModel tableModel = new DefaultTableModel();
+    private DichVuController controller = new DichVuController();
+    
     public frmDV() {
         initComponents();
-
+        tbDichVu.setModel(tableModel);
+        String[] row = {"ID", "Tên"};
+        tableModel.setColumnIdentifiers(row);
+        showData();;
+    }
+    public final void clearData() {
+        int n = tableModel.getRowCount() - 1;
+        for (int i = n; i >= 0; i--) {
+            tableModel.removeRow(i);
+        }
+    }
+    
+    public final void showData() {
+        clearData();
+        List<DichVu> list = controller.getAll();
+        for (int i = 0; i < list.size(); i++) {
+            Object[] rows = {
+                list.get(i).getId(),
+                list.get(i).getTen(),
+            };
+            tableModel.addRow(rows);
+        }
+    }
+    public final void clearText() {
+        txtID.setText("");
+        txtTen.setText("");
     }
 
     /**
@@ -65,8 +94,18 @@ public class frmDV extends javax.swing.JFrame {
         jScrollPane1.setViewportView(tbDichVu);
 
         btnThem.setText("Thêm");
+        btnThem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnThemActionPerformed(evt);
+            }
+        });
 
         btnBack.setText("Quay lại");
+        btnBack.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnBackActionPerformed(evt);
+            }
+        });
 
         jLabel2.setText("Mã dịch vụ");
 
@@ -125,6 +164,32 @@ public class frmDV extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void btnThemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnThemActionPerformed
+        // TODO add your handling code here:
+        String id = txtID.getText();
+        String ten = txtTen.getText();
+        DichVu dv = new DichVu(id, ten);
+        try {
+            boolean them = controller.insertData(dv);
+            if (them) {
+                JOptionPane.showMessageDialog(rootPane, "Thêm thành công");
+            } else {
+                JOptionPane.showMessageDialog(rootPane, "Thêm không thành công");
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(frmKhachThue.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        showData();
+        clearText();
+    }//GEN-LAST:event_btnThemActionPerformed
+
+    private void btnBackActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBackActionPerformed
+        // TODO add your handling code here:
+        frmMain fMain = new frmMain();
+        fMain.setVisible(true);
+        this.dispose();
+    }//GEN-LAST:event_btnBackActionPerformed
 
     /**
      * @param args the command line arguments
