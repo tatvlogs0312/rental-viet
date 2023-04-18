@@ -120,6 +120,9 @@
               <TableHeader reorderingAllowed="true" resizingAllowed="true"/>
             </Property>
           </Properties>
+          <Events>
+            <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="tbHoaDonMouseClicked"/>
+          </Events>
         </Component>
       </SubComponents>
     </Container>
@@ -127,16 +130,25 @@
       <Properties>
         <Property name="text" type="java.lang.String" value="Quay l&#x1ea1;i"/>
       </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnBackActionPerformed"/>
+      </Events>
     </Component>
     <Component class="javax.swing.JButton" name="btnThanhToan">
       <Properties>
         <Property name="text" type="java.lang.String" value="Thanh to&#xe1;n"/>
       </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnThanhToanActionPerformed"/>
+      </Events>
     </Component>
     <Component class="javax.swing.JButton" name="btnTao">
       <Properties>
         <Property name="text" type="java.lang.String" value="T&#x1ea1;o h&#xf3;a &#x111;&#x1a1;n m&#x1edb;i"/>
       </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnTaoActionPerformed"/>
+      </Events>
     </Component>
     <Component class="javax.swing.JLabel" name="jLabel1">
       <Properties>
@@ -157,11 +169,17 @@
       <Properties>
         <Property name="text" type="java.lang.String" value="Chi ti&#x1ebf;t s&#x1eed; d&#x1ee5;ng"/>
       </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnChiTietActionPerformed"/>
+      </Events>
     </Component>
     <Component class="javax.swing.JButton" name="btnReset">
       <Properties>
         <Property name="text" type="java.lang.String" value="L&#xe0;m m&#x1edb;i"/>
       </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnResetActionPerformed"/>
+      </Events>
     </Component>
   </SubComponents>
 </Form>

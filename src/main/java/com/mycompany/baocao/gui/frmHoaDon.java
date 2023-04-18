@@ -21,9 +21,50 @@ public class frmHoaDon extends javax.swing.JFrame {
     /**
      * Creates new form frmHoaDon
      */
+    private String id_HopDong;
+    private HoaDonController controller = new HoaDonController();
+    private DefaultTableModel tableModel = new DefaultTableModel();
+    
     public frmHoaDon() {
         initComponents();
     }
+    
+    public frmHoaDon(String id_HopDong) {
+        initComponents();
+        String[] row = {"thang","trang thai","tong tien"};
+        this.id_HopDong = id_HopDong;
+        tbHoaDon.setModel(tableModel);
+        tableModel.setColumnIdentifiers(row);
+        showData();
+        setBtn(true);
+    }
+    
+    public final void setBtn(boolean a){
+        btnTao.setVisible(a);
+        btnChiTiet.setVisible(!a);
+        btnThanhToan.setVisible(!a);
+    }
+    
+    public final void showData(){
+        clearData();
+        List<HoaDon> lst = controller.getAll(id_HopDong);
+        for(int i = 0 ; i < lst.size() ; i++){
+            String row[] = {
+                lst.get(i).getThang(),
+                lst.get(i).getTrangThai(),
+                lst.get(i).getTongTien(),
+            };
+            tableModel.addRow(row);
+        }
+    }
+    
+     public final void clearData() {
+        int n = tableModel.getRowCount() - 1;
+        for (int i = n; i >= 0; i--) {
+            tableModel.removeRow(i);
+        }
+    }
+
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -58,13 +99,33 @@ public class frmHoaDon extends javax.swing.JFrame {
                 "Title 1", "Title 2", "Title 3"
             }
         ));
+        tbHoaDon.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tbHoaDonMouseClicked(evt);
+            }
+        });
         jScrollPane1.setViewportView(tbHoaDon);
 
         btnBack.setText("Quay lại");
+        btnBack.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnBackActionPerformed(evt);
+            }
+        });
 
         btnThanhToan.setText("Thanh toán");
+        btnThanhToan.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnThanhToanActionPerformed(evt);
+            }
+        });
 
         btnTao.setText("Tạo hóa đơn mới");
+        btnTao.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnTaoActionPerformed(evt);
+            }
+        });
 
         jLabel1.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
         jLabel1.setText("Hóa đơn");
@@ -72,8 +133,18 @@ public class frmHoaDon extends javax.swing.JFrame {
         jLabel2.setText("Tháng");
 
         btnChiTiet.setText("Chi tiết sử dụng");
+        btnChiTiet.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnChiTietActionPerformed(evt);
+            }
+        });
 
         btnReset.setText("Làm mới");
+        btnReset.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnResetActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -129,6 +200,63 @@ public class frmHoaDon extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void btnThanhToanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnThanhToanActionPerformed
+        // TODO add your handling code here:       
+        String id = controller.getId(id_HopDong, txtThang.getText());
+        boolean thanhToan = controller.updateHD(id);
+        if(thanhToan){
+            JOptionPane.showMessageDialog(rootPane, "Thanh toán hóa đơn thành công");
+        }
+        else{
+            JOptionPane.showMessageDialog(rootPane, "Thanh toán hóa đơn không thành công");
+        }
+        showData();
+    }//GEN-LAST:event_btnThanhToanActionPerformed
+
+    private void btnTaoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnTaoActionPerformed
+        // TODO add your handling code here:
+        UUID rd = UUID.randomUUID();
+        String id = String.valueOf(rd);    
+        boolean tao = controller.insertHD(id, id_HopDong, txtThang.getText());
+        if(tao){
+            JOptionPane.showMessageDialog(rootPane, "Tạo hóa đơn thành công");
+        }
+        else{
+            JOptionPane.showMessageDialog(rootPane, "Tạo hóa đơn không thành công");
+        }
+        showData();
+    }//GEN-LAST:event_btnTaoActionPerformed
+
+    private void tbHoaDonMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tbHoaDonMouseClicked
+        // TODO add your handling code here:
+        TableModel tableModel = tbHoaDon.getModel();
+        int row = tbHoaDon.getSelectedRow();
+        txtThang.setText(tableModel.getValueAt(row, 0).toString());
+        setBtn(false);
+    }//GEN-LAST:event_tbHoaDonMouseClicked
+
+    private void btnResetActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnResetActionPerformed
+        // TODO add your handling code here:
+        txtThang.setText("");
+        setBtn(true);
+    }//GEN-LAST:event_btnResetActionPerformed
+
+    private void btnBackActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBackActionPerformed
+        // TODO add your handling code here:
+        String phong = controller.getPhong(id_HopDong);
+        frmHopDong fHopDong = new frmHopDong(phong);
+        fHopDong.setVisible(true);
+        this.dispose();
+    }//GEN-LAST:event_btnBackActionPerformed
+
+    private void btnChiTietActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnChiTietActionPerformed
+        // TODO add your handling code here:
+        String id = controller.getId(id_HopDong, txtThang.getText());
+        frmCTDV fCTDV = new frmCTDV(id);
+        fCTDV.setVisible(true);
+        this.dispose();
+    }//GEN-LAST:event_btnChiTietActionPerformed
 
     /**
      * @param args the command line arguments
