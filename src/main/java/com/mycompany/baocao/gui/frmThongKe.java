@@ -19,9 +19,46 @@ public class frmThongKe extends javax.swing.JFrame {
     /**
      * Creates new form frmThongKe
      */
+    private ThongKeController controller = new ThongKeController();
+    private DefaultTableModel tableModel = new DefaultTableModel();
+    
     public frmThongKe() {
         initComponents();
-
+        String[] row = {"Hợp đồng","tháng","tổng tiền"};
+        tbThongKe.setModel(tableModel);
+        tableModel.setColumnIdentifiers(row);
+        showData();
+        tong();
+    }
+    
+    public final void showData(){
+        clearData();
+        List<HoaDon> lst = controller.getAll();
+        for(int i = 0 ; i < lst.size() ; i++){
+            String row[] = {
+                lst.get(i).getHopDong(),
+                lst.get(i).getThang(),
+                lst.get(i).getTongTien(),
+            };
+            tableModel.addRow(row);
+        }
+    }
+    
+    public final void clearData() {
+        int n = tableModel.getRowCount() - 1;
+        for (int i = n; i >= 0; i--) {
+            tableModel.removeRow(i);
+        }
+    }
+    
+    public void tong(){
+        String tong = controller.getTong();
+        txtTong.setText(tong);
+    }
+    
+    public void tongTheoThang(String thang){
+        String tong = controller.getTongByThang(thang);
+        txtTong.setText(tong);
     }
 
     /**
@@ -47,8 +84,18 @@ public class frmThongKe extends javax.swing.JFrame {
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
         jButton1.setText("Quay lại");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
 
         jButton2.setText("Thống kê");
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton2ActionPerformed(evt);
+            }
+        });
 
         tbThongKe.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -73,6 +120,11 @@ public class frmThongKe extends javax.swing.JFrame {
         jLabel3.setText("Tháng :");
 
         jButton3.setText("Thống kê toàn bộ");
+        jButton3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton3ActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -131,6 +183,35 @@ public class frmThongKe extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        // TODO add your handling code here:
+        frmMain fMain = new frmMain();
+        fMain.setVisible(true);
+        this.dispose();
+    }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
+        // TODO add your handling code here:
+        showData();
+        tong();
+    }//GEN-LAST:event_jButton3ActionPerformed
+
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+        // TODO add your handling code here:
+        String thang = cbThang.getSelectedItem().toString();
+        clearData();
+        List<HoaDon> lst = controller.getByThang(thang);
+        for(int i = 0 ; i < lst.size() ; i++){
+            String row[] = {
+                lst.get(i).getHopDong(),
+                lst.get(i).getThang(),
+                lst.get(i).getTongTien(),
+            };
+            tableModel.addRow(row);
+        }
+        tongTheoThang(thang);
+    }//GEN-LAST:event_jButton2ActionPerformed
 
     /**
      * @param args the command line arguments
